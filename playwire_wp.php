@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="<?php echo bloginfo('url');?>/wp-content/plugins/playwire_wp/css/style.css" type="text/css" />
 <?php ob_start();
 /***************************************************************************
 Plugin Name:  Playwire for Wordpress
@@ -10,6 +9,12 @@ Author URI:   http://www.playwire.com/
 Author Name:   Playwire
 **************************************************************************/
 add_action('admin_menu', 'venues_admin_actions');
+
+function my_css() {
+echo '<link type="text/css" rel="stylesheet" href="' . get_bloginfo('wpurl') .'/wp-content/plugins/playwire_wp/css/style.css">' . "\n";
+}
+
+add_action('admin_head', 'my_css');
 
  function venues_admin_actions() {
     	// Add a new top-level menu for plugin:
