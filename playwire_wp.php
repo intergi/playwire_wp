@@ -20,10 +20,10 @@ add_action('admin_head', 'my_css');
     	// Add a new top-level menu for plugin:
 	add_menu_page('Playwire', 'Playwire','','mt-top-level-handle', 'mt_toplevel_page');	
         // Add a submenu to the custom top-level menu:
-   	add_submenu_page('mt-top-level-handle', '', 'List Video', 'administrator', 'mt_sublevel_handle', 'mt_sublevel_page');
-	add_submenu_page('mt-top-level-handle', '','Add Video',   'administrator', 'mt-toplevel-handle', 'mt_toplevel_page');
-	add_submenu_page('mt-top-level-handle', '','',   'administrator', 'mt-view-level-handle', 'mt_viewlevel_page');
-	add_submenu_page('mt-top-level-handle', '','',   'administrator', 'mt-delete-level-handle', 'mt_deletelevel_page');
+   	add_submenu_page('mt-top-level-handle', '', 'List Video', 'publish_posts', 'mt_sublevel_handle', 'mt_sublevel_page');
+	add_submenu_page('mt-top-level-handle', '','Add Video',   'publish_posts', 'mt-toplevel-handle', 'mt_toplevel_page');
+	add_submenu_page('mt-top-level-handle', '','',   'publish_posts', 'mt-view-level-handle', 'mt_viewlevel_page');
+	add_submenu_page('mt-top-level-handle', '','',   'publish_posts', 'mt-delete-level-handle', 'mt_deletelevel_page');
  }
 
 //Function to delete the video start here
