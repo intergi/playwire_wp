@@ -131,8 +131,9 @@ class playwire_list_table extends WP_List_Table {
 						
 						if($video->thumb_url != '') {
 							printf(
-								'<td %s><img src="%s" width="100"/></td>',
+								'<td %s><a href="admin-ajax.php?action=playwire&id=%d&TB_iframe=false&width=620&height=360" class="thickbox"><img src="%s" width="100"/></a></td>',
 								$attr,
+								$video->id,
 								$video->thumb_url
 							);
 						} else {

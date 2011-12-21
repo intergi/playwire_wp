@@ -4,9 +4,7 @@ class playwire_media {
 	protected $playwire = false;
 	protected $api_key;
 
-	function __construct($plugin) {
-		#require_once 'common.php';
-		
+	function __construct($plugin) {		
 		$this->api_key = get_option('playwire-api-key');
 		if(!empty($this->api_key)) {
 			$this->playwire = new Playwire($this->api_key);
@@ -35,10 +33,8 @@ class playwire_media {
 		add_menu_page('Playwire', 'Playwire', '', 'playwire_menu', array(&$this, 'list_videos'));	
 	    
 	    #(parent_slug, page_title, menu_title, capability, menu_slug, func)
-		#add_submenu_page('playwire_menu', '', 'List Videos', 'publish_posts', 'playwire-list', array(&$this, 'list_videos'));
 		add_submenu_page('playwire_menu', '', 'List Videos', 'publish_posts', 'playwire-list', array(&$this, 'list_videos_wp'));
 		add_submenu_page('playwire_menu', '','Add Video',   'publish_posts', 'playwire-add', array(&$this, 'new_video'));
-		#add_submenu_page('playwire_menu', '','',   'publish_posts', 'playwire-view', array(&$this, 'view_video'));
 		add_submenu_page('playwire_menu', '','',   'publish_posts', 'playwire-delete', array(&$this, 'delete_video'));
 
 
@@ -55,52 +51,15 @@ class playwire_media {
 	function list_videos_wp() {
 		$list_table = new playwire_list_table();
 		$list_table->prepare_items();
+
 		add_thickbox();
-		
-		
 		echo '<div class="wrap nosubsub">';
-		
 		screen_icon('upload');
 		echo '<h2>Playwire Videos <a href="?page=playwire-add" class="add-new-h2">Add New</a></h2>';
 
 		$list_table->display();
 		echo '</div>';
 	}
-
-	function list_wp_help() {
-		$screen = get_current_screen();
-		$screen->add_help_tab(array(
-			'id' => 'list_videos_wp',
-			'title' => 'foo',
-			'content' => 'foobar'
-		));
-	}
-
-	# List all videos
-	function list_videos(){
-		
-		$sandbox = isset($_GET['sandbox']) && $_GET['sandbox'] == 1;
-		$page = isset($_GET['pageno']) ? $_GET['pageno'] : 1;
-		$count = isset($_GET['count']) ? $_GET['count'] : 20;
-		$sort_by = isset($_GET['sort']) ? $_GET['sort'] : '';
-
-		$params = $sort_by ? array('get' => array('sort' => $sort_by)) : array();
-
-
-		$api_key = $this->api_key; 
-		if($sandbox) {
-			$total_videos = $this->playwire->getVideoSandboxCount();
-			$videos  = $this->playwire->getVideoSandboxIndex($count, $page, $params);
-
-		} else {
-			$total_videos = $this->playwire->getVideoCount();
-			$videos  = $this->playwire->getVideoIndex($count, $page, $params);
-		}
-
-		include 'listing.tpl.php';
-	}
-
-
 
 	# Upload a new video to playwire
 	function new_video() {
@@ -153,6 +112,7 @@ class playwire_media {
 		include 'view.tpl.php';
 		exit();
 	}
+
 	# Delete a single video
 	function delete_video() {
 		$error = false;
@@ -163,17 +123,15 @@ class playwire_media {
 		} catch (PlaywireException $exception) {
 			$error = $exception->getMessage();
 		}
-
-		include 'delete.tpl.php';
 	}
 
 	# Embed the video via HTML
 	# Used via short codes in a post
 	function embed_video($id, $sandbox = false) {
+		$id = $id['id'];
 		$video = ($sandbox) ? $this->playwire->getSandboxVideo($id) : $this->playwire->getVideo($id);
-		
-		
-		echo $this->playwire->js_embed_code;
+
+		echo $video->js_embed_code;
 	}
 }
 
