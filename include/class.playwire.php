@@ -14,7 +14,7 @@
 	define("PLAYWIRE_ERROR_FIELD_ERRORS", 8500);
 	define("PLAYWIRE_ERROR_INVALID_XML_FROM_SERVICE", 9500);
 
-	class Playwire extends RestApi
+	class Playwire extends pw_RestApi
 	{
 		protected $cache_ext = 'playwire';
 		protected $api_token;

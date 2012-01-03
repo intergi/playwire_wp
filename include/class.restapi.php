@@ -4,7 +4,7 @@
 		Jason Tan
 		http://code.google.com/p/php-rest-api/
 	*/
-	class RestApi
+	class pw_RestApi
 	{
 		protected $username;
 		protected $password;
@@ -216,7 +216,7 @@
 	
 	require_once('class.oauth.php');
 
-	class OAuthRestApi extends RestApi
+	class pw_OAuthRestApi extends pw_RestApi
 	{
 		protected $oa_method;
 		protected $consumer;
@@ -225,14 +225,14 @@
 		
 		function __construct($consumer_key, $consumer_secret)
 		{
-		    $this->consumer = new OAuthConsumer($consumer_key, $consumer_secret);			
-		    $this->oa_method = new OAuthSignatureMethod_HMAC_SHA1();
+		    $this->consumer = new pw_OAuthConsumer($consumer_key, $consumer_secret);			
+		    $this->oa_method = new pw_OAuthSignatureMethod_HMAC_SHA1();
 			parent::__construct();
 		}
 		
 		function login($oauth_token, $oauth_token_secret)
 		{
-			$this->access_token = new OAuthConsumer($oauth_token, $oauth_token_secret);
+			$this->access_token = new pw_OAuthConsumer($oauth_token, $oauth_token_secret);
 		}
 		
 		static function parseToken($string)
@@ -240,14 +240,14 @@
 			$token = array();
 			parse_str($string, $token);
 			if (isset($token['oauth_token']) && isset($token['oauth_token_secret']))
-				return new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
+				return new pw_OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
 			else
 				return false;
 		}
 		
 		function getAuthorizeUrl($request_url, $authorize_url, $callback = false)
 		{
-			$req = OAuthRequest::from_consumer_and_token($this->consumer, null, 'GET', $request_url);
+			$req = pw_OAuthRequest::from_consumer_and_token($this->consumer, null, 'GET', $request_url);
 		    $req->sign_request($this->oa_method, $this->consumer, null);
 		
 			$format = $this->format;
@@ -276,7 +276,7 @@
 				else
 					return false;
 			}
-			$req = OAuthRequest::from_consumer_and_token($this->consumer, $this->request_token, 'GET', $access_url);
+			$req = pw_OAuthRequest::from_consumer_and_token($this->consumer, $this->request_token, 'GET', $access_url);
 			$req->sign_request($this->oa_method, $this->consumer, $this->request_token);
 		
 			$format = $this->format;
@@ -301,9 +301,9 @@
 		function request($url, $extra = array(), $force_post = false)
 		{
 			$oauth = array(
-				'oauth_version' => OAuthRequest::$version,
-				'oauth_nonce' => OAuthRequest::generate_nonce(),
-				'oauth_timestamp' => OAuthRequest::generate_timestamp(),
+				'oauth_version' => pw_OAuthRequest::$version,
+				'oauth_nonce' => pw_OAuthRequest::generate_nonce(),
+				'oauth_timestamp' => pw_OAuthRequest::generate_timestamp(),
 				'oauth_consumer_key' => $this->consumer->key,
 				'oauth_token' => $this->access_token->key,
 				'oauth_signature_method'=>$this->oa_method->get_name()
@@ -322,7 +322,7 @@
 				$method = 'GET';
 			
 			$params = array_merge($params, $oauth);
-			$request = new OAuthRequest($method, $url, $params);
+			$request = new pw_OAuthRequest($method, $url, $params);
 		    $params['oauth_signature'] = $request->build_signature($this->oa_method, $this->consumer, $this->access_token);
 
 			$extra[strtolower($method)] = $params;
