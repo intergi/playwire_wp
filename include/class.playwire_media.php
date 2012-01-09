@@ -4,15 +4,17 @@ class playwire_media {
 	protected $playwire = false;
 	protected $api_key;
 
-	function __construct($plugin) {		
+	function __construct($plugin) {	
+			
 		$this->api_key = get_option('playwire-api-key');
 		if(!empty($this->api_key)) {
 			$this->playwire = new Playwire($this->api_key);
+			
 		}
 
 		add_action('admin_init', array(&$this, 'init'));
 		add_action('admin_menu', array(&$this, 'menu'));
-
+		
 		add_shortcode('blogvideo', array(&$this, 'embed_video'));
 		
 		
@@ -28,23 +30,34 @@ class playwire_media {
 	}
 
 	function menu() {
-		## Main Menu
-		#(page_title, menu_title, capability, menu_slug, func, icon, position)
-		add_menu_page('Playwire', 'Playwire', '', 'playwire_menu', array(&$this, 'list_videos'));	
-	    
-	    #(parent_slug, page_title, menu_title, capability, menu_slug, func)
-		add_submenu_page('playwire_menu', '', 'List Videos', 'publish_posts', 'playwire-list', array(&$this, 'list_videos_wp'));
-		add_submenu_page('playwire_menu', '','Add Video',   'publish_posts', 'playwire-add', array(&$this, 'new_video'));
-		add_submenu_page('playwire_menu', '','',   'publish_posts', 'playwire-delete', array(&$this, 'delete_video'));
+		if($this->playwire) {
+			## Main Menu
+			#(page_title, menu_title, capability, menu_slug, func, icon, position)
+			add_menu_page('Playwire', 'Playwire', '', 'playwire_menu', array(&$this, 'list_videos'));	
+		    
+		    #(parent_slug, page_title, menu_title, capability, menu_slug, func)
+			add_submenu_page('playwire_menu', '', 'List Videos', 'publish_posts', 'playwire-list', array(&$this, 'list_videos_wp'));
+			add_submenu_page('playwire_menu', '','Add Video',   'publish_posts', 'playwire-add', array(&$this, 'new_video'));
+			add_submenu_page('playwire_menu', '','',   'publish_posts', 'playwire-delete', array(&$this, 'delete_video'));
+		} else {
+			add_menu_page('Playwire', 'Playwire', '', 'playwire_menu', array(&$this, 'options_page'));	
+		    
+		    #(parent_slug, page_title, menu_title, capability, menu_slug, func)
+			add_submenu_page('playwire_menu', '', 'List Videos', 'publish_posts', 'playwire-list', array(&$this, 'options_page'));
+			add_submenu_page('playwire_menu', '','Add Video',   'publish_posts', 'playwire-add', array(&$this, 'options_page'));
+			add_submenu_page('playwire_menu', '','',   'publish_posts', 'playwire-delete', array(&$this, 'options_page'));
+		}
+		
 
 
 		## Options Page
 		#(page_title, menu_title, capability, slug, function)
 		add_options_page('Playwire', 'Playwire', 'manage_options', 'playwire-settings', array(&$this, 'options_page'));
-
 	}
 
+
 	function options_page() {
+		$missing = !is_object($this->playwire);
 		include 'options.tpl.php';
 	}
 

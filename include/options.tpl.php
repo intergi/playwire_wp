@@ -7,6 +7,9 @@
 settings_fields('playwire');
 $api_key = get_option('playwire-api-key');
 ?>
+<? if($missing): ?>
+<h3>Your API Key is required to use the playwire plugin</h3>
+<? endif ?>
 
 
 <table class="form-table">

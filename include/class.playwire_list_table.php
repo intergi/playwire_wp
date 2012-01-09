@@ -18,7 +18,7 @@ class playwire_list_table extends WP_List_Table {
 		$this->api_key = get_option('playwire-api-key');
 		if(!empty($this->api_key)) {
 			$this->playwire = new Playwire($this->api_key);
-		}
+		} 
 	}
 
 	# Extra markup before or after the list
