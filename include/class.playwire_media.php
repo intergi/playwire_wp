@@ -21,7 +21,6 @@ class playwire_media {
 	}
 
 	function init() {
-		settings_fields('playwire');
 		register_setting('playwire', 'playwire-api-key');
 		
 
