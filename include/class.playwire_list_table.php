@@ -80,7 +80,7 @@ class playwire_list_table extends WP_List_Table {
 		$params = $sort_by ? array('get' => array('sort' => $sort_by)) : array();
 
 		$this->set_pagination_args(array(
-			'total_items' => $total_items,
+			'total_items' => (double)$total_items,
 			'total_pages' => $total_pages,
 			'per_page' => $perpage
 		));
